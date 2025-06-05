@@ -1,5 +1,5 @@
 import { gql, useLazyQuery } from "@apollo/client";
-import { type ChangeEvent, useState } from "react";
+import { type ChangeEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
@@ -31,6 +31,11 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   `;
   const [getingUser, { data: Userdata }] = useLazyQuery(getUser);
   const [addingUser, { data: addingUserData }] = useLazyQuery(addUser);
+    useEffect(()=>{
+     if(Userdata!=undefined||addingUserData){
+      type=="signin"?navigate("/"):navigate("/signin")
+    }
+  },[Userdata,addingUserData])
   function gettingUsersData() {
     getingUser({
       variables: {
@@ -57,11 +62,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       alert("an error has happend");
     }
   }
-  {
-    if(Userdata!=undefined||addingUserData){
-      type=="signin"?navigate("/"):navigate("/signin")
-    }
-  }
+
   return (
     <div className="h-screen  flex justify-center flex-col">
       <div className="flex justify-center">
